@@ -17,6 +17,7 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.keymap.set('n', '<leader>pv', ':Ex<CR>', { desc = 'Open netrw in current directory' })
+vim.keymap.set('n', '<leader>pe', ':Neotree toggle position=left<CR>', { desc = 'Toggle neotree window' })
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
