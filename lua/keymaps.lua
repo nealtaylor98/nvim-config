@@ -19,6 +19,8 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '<leader>pv', ':Ex<CR>', { desc = 'Open netrw in current directory' })
 vim.keymap.set('n', '<leader>pe', ':Neotree toggle position=left<CR>', { desc = 'Toggle neotree window' })
 
+vim.keymap.set('n', '<leader>\\', ':vsplit<CR>', { desc = 'Split the window vertically' })
+
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
