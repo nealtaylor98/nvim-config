@@ -98,9 +98,20 @@ return {
             })
           end
 
+          vim.diagnostic.config {
+            virtual_text = {
+              severity = {
+                min = vim.diagnostic.severity.ERROR, -- Show virtual text for errors only
+              },
+            },
+            signs = true, -- Show signs in the sign column for all diagnostics
+            underline = true, -- Underline the affected code for all diagnostics
+            update_in_insert = false, -- Do not show diagnostics in insert mode
+            severity_sort = true, -- Sort diagnostics by severity
+          }
+
           -- The following autocommand is used to enable inlay hints in your
           -- code, if the language server you are using supports them
-          --
           -- This may be unwanted, since they displace some of your code
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
             map('<leader>th', function()
@@ -134,13 +145,13 @@ return {
         html = {
           filetypes = {
             'html',
-            'rust',
+            -- 'rust',
           },
           init_options = {
             userLanguages = {
               eelixir = 'html-eex',
               eruby = 'erb',
-              rust = 'html',
+              -- rust = 'html',
             },
           },
         },
