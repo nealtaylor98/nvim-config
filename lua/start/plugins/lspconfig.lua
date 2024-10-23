@@ -140,23 +140,12 @@ return {
       local servers = {
         clangd = {},
         rust_analyzer = {},
-        --
-        tsserver = {},
+        ts_ls = {},
         html = {
           filetypes = {
             'html',
-            -- 'rust',
-          },
-          init_options = {
-            userLanguages = {
-              eelixir = 'html-eex',
-              eruby = 'erb',
-              -- rust = 'html',
-            },
           },
         },
-        --
-
         lua_ls = {
           settings = {
             Lua = {
