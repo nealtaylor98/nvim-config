@@ -140,12 +140,6 @@ return {
       local servers = {
         clangd = {},
         rust_analyzer = {},
-        ts_ls = {},
-        html = {
-          filetypes = {
-            'html',
-          },
-        },
         lua_ls = {
           settings = {
             Lua = {
