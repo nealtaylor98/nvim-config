@@ -48,9 +48,9 @@ require('lazy').setup({
 
   require 'start/plugins/neo-tree',
 
-  require 'start/plugins/obsidian',
-
   require 'start/plugins/render-markdown',
+
+  require 'start/plugins/roslyn',
 
   -- The following two comments only work if you have downloaded the start repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
