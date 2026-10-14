@@ -108,16 +108,14 @@ return {
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      vim.lsp.config('*', { capabilities = capabilities })
+      for server_name, server in pairs(servers) do
+        vim.lsp.config(server_name, server)
+      end
 
-            vim.lsp.config(server_name, server)
-            vim.lsp.enable(server_name)
-          end,
-        },
+      -- roslyn.nvim starts its own client; letting mason-lspconfig also enable roslyn_ls attaches a second one
+      require('mason-lspconfig').setup {
+        automatic_enable = { exclude = { 'roslyn_ls' } },
       }
     end,
   },

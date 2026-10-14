@@ -36,6 +36,8 @@ require('lazy').setup({
 
   require 'start/plugins/conform',
 
+  require 'start/plugins/lint',
+
   require 'start/plugins/cmp',
 
   require 'start/plugins/todo-comments',

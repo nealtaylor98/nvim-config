@@ -5,49 +5,34 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
-      lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
+      local vp = require 'start.vite-plus'
+
+      lint.linters.vp_lint = {
+        name = 'vp_lint',
+        cmd = function()
+          return vp.bin(vim.api.nvim_get_current_buf())
+        end,
+        args = { 'lint', '-f', 'unix' },
+        stdin = false,
+        append_fname = true,
+        stream = 'stdout',
+        ignore_exitcode = true,
+        parser = require('lint.parser').from_pattern(
+          '^.-:(%d+):(%d+): (.-) %[(%a+)/(.-)%]$',
+          { 'lnum', 'col', 'message', 'severity', 'code' },
+          { Error = vim.diagnostic.severity.ERROR, Warning = vim.diagnostic.severity.WARN },
+          { source = 'oxlint' }
+        ),
       }
 
-      -- To allow other plugins to add linters to require('lint').linters_by_ft,
-      -- instead set linters_by_ft like this:
-      -- lint.linters_by_ft = lint.linters_by_ft or {}
-      -- lint.linters_by_ft['markdown'] = { 'markdownlint' }
-      --
-      -- However, note that this will enable a set of default linters,
-      -- which will cause errors unless these tools are available:
-      -- {
-      --   clojure = { "clj-kondo" },
-      --   dockerfile = { "hadolint" },
-      --   inko = { "inko" },
-      --   janet = { "janet" },
-      --   json = { "jsonlint" },
-      --   markdown = { "vale" },
-      --   rst = { "vale" },
-      --   ruby = { "ruby" },
-      --   terraform = { "tflint" },
-      --   text = { "vale" }
-      -- }
-      --
-      -- You can disable the default linters by setting their filetypes to nil:
-      -- lint.linters_by_ft['clojure'] = nil
-      -- lint.linters_by_ft['dockerfile'] = nil
-      -- lint.linters_by_ft['inko'] = nil
-      -- lint.linters_by_ft['janet'] = nil
-      -- lint.linters_by_ft['json'] = nil
-      -- lint.linters_by_ft['markdown'] = nil
-      -- lint.linters_by_ft['rst'] = nil
-      -- lint.linters_by_ft['ruby'] = nil
-      -- lint.linters_by_ft['terraform'] = nil
-      -- lint.linters_by_ft['text'] = nil
-
-      -- Create autocommand which carries out the actual linting
-      -- on the specified events.
+      -- vp lint reads the file on disk, so only lint when disk matches the buffer.
       local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+      vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
         group = lint_augroup,
-        callback = function()
-          require('lint').try_lint()
+        callback = function(args)
+          if vp.filetypes[vim.bo[args.buf].filetype] and vp.bin(args.buf) then
+            lint.try_lint('vp_lint', { cwd = vp.root(args.buf) })
+          end
         end,
       })
     end,
